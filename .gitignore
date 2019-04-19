@@ -1,0 +1,15 @@
+logs
+tmp
+*.log
+npm-debug.log*
+
+node_modules
+dist
+
+*~
+
+.nyc_output
+
+coverage
+
+*.npmrc
