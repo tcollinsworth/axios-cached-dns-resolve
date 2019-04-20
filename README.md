@@ -50,6 +50,7 @@ npm i -S axios-cached-dns-resolve
 
 ```javascript
 const config = {
+  disabled: process.env.AXIOS_DNS_DISABLE === "true",
   dnsTtlMs: process.env.AXIOS_DNS_CACHE_TTL_MS || 5000, // when to refresh actively used dns entries (5 sec)
   cacheGraceExpireMultiplier: process.env.AXIOS_DNS_CACHE_EXPIRE_MULTIPLIER || 2, // maximum grace to use entry beyond TTL
   dnsIdleTtlMs: process.env.AXIOS_DNS_CACHE_TTL_MS || 1000 * 60 * 10, // when to remove entry entirely if not being used (10 min)

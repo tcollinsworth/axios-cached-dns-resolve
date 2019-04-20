@@ -93,6 +93,6 @@ test('query two servies, caches and after one idle delay uncached', async t => {
   t.is(2, axiosCachingDns.config.cache.length)
   await delay(4000)
   t.is(1, axiosCachingDns.config.cache.length)
-  await delay(1000)
+  await delay(2000)
   t.is(0, axiosCachingDns.config.cache.length)
 })
