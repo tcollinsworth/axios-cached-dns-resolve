@@ -1,6 +1,6 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
   "main": "index.js",
   "scripts": {
