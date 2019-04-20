@@ -48,6 +48,8 @@ test('query google with baseURL and relative url', async t => {
       //headers: { Authorization: `Basic ${basicauth}` },
     })
   t.truthy(data)
+  t.is(1, axiosCachingDns.getStats().dnsEntries)
+  t.is(1, axiosCachingDns.getStats().misses)
 })
 
 test('query google caches and after idle delay uncached', async t => {
@@ -56,6 +58,21 @@ test('query google caches and after idle delay uncached', async t => {
   t.truthy(axiosCachingDns.config.cache.get('amazon.com'))
   await delay(6000)
   t.falsy(axiosCachingDns.config.cache.get('amazon.com'))
+
+  const expectedStats = {
+    dnsEntries: 0,
+    //refreshed: 4, variable
+    hits: 0,
+    misses: 2,
+    idleExpired: 1,
+    errors: 0,
+    lastError: 0,
+    lastErrorTs: 0
+  }
+
+  const stats = axiosCachingDns.getStats()
+  delete stats.refreshed
+  t.deepEqual(expectedStats, stats)
 })
 
 test('query google caches and refreshes', async t => {
@@ -70,9 +87,24 @@ test('query google caches and refreshes', async t => {
     if (Date.now() > timeoutTime) t.fail()
     await delay(10)
   }
+
+  const expectedStats = {
+    dnsEntries: 1,
+    //refreshed: 5, variable
+    hits: 0,
+    misses: 3,
+    idleExpired: 1,
+    errors: 0,
+    lastError: 0,
+    lastErrorTs: 0
+  }
+
+  const stats = axiosCachingDns.getStats()
+  delete stats.refreshed
+  t.deepEqual(expectedStats, stats)
 })
 
-test('query two servies, caches and after one idle delay uncached', async t => {
+test('query two services, caches and after one idle delay uncached', async t => {
   await axiosClient.get('https://amazon.com')
 
   await axiosClient.get('https://microsoft.com')
@@ -95,4 +127,20 @@ test('query two servies, caches and after one idle delay uncached', async t => {
   t.is(1, axiosCachingDns.config.cache.length)
   await delay(2000)
   t.is(0, axiosCachingDns.config.cache.length)
+
+
+  const expectedStats = {
+    dnsEntries: 0,
+    //refreshed: 17, variable
+    hits: 2,
+    misses: 5,
+    idleExpired: 3,
+    errors: 0,
+    lastError: 0,
+    lastErrorTs: 0
+  }
+
+  const stats = axiosCachingDns.getStats()
+  delete stats.refreshed
+  t.deepEqual(expectedStats, stats)
 })
