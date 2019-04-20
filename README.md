@@ -37,6 +37,8 @@ npm i -S axios-cached-dns-resolve
 # Usage
 
 ```javascript
+  import { registerInterceptor } from 'axios-cached-dns-resolve'
+
   const axiosClient = axios.create(config)
 
   axiosCachingDns.registerInterceptor(axiosClient)
