@@ -1,6 +1,6 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
   "main": "index.js",
   "scripts": {
@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "lodash": "^4.17.11",
     "lru-cache": "^5.1.1",
     "pino": "^5.12.2",
     "pino-pretty": "^2.6.0"

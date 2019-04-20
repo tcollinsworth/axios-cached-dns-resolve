@@ -1,4 +1,4 @@
-import { test } from 'ava'
+import { serial as test } from 'ava'
 import delay from 'delay'
 import dns from 'dns'
 import URL from 'url'
@@ -36,6 +36,20 @@ test.beforeEach(() => {
   axiosCachingDns.startPeriodicCachePrune()
 })
 
+test.after.always(() => {
+  axiosCachingDns.config.cache.reset()
+})
+
+test('query google with baseURL and relative url', async t => {
+  axiosCachingDns.registerInterceptor(axios)
+
+  const { data } = await axios.get('/finance', {
+      baseURL: 'http://www.google.com',
+      //headers: { Authorization: `Basic ${basicauth}` },
+    })
+  t.truthy(data)
+})
+
 test('query google caches and after idle delay uncached', async t => {
   const resp = await axiosClient.get('https://amazon.com')
   t.truthy(resp.data)
@@ -63,13 +77,16 @@ test('query two servies, caches and after one idle delay uncached', async t => {
 
   await axiosClient.get('https://microsoft.com')
   const lastUsedTs = axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs
+  t.is(1, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   await axiosClient.get('https://microsoft.com')
+  t.is(2, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   t.truthy(lastUsedTs < axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
 
   t.is(2, axiosCachingDns.config.cache.length)
   await axiosClient.get('https://microsoft.com')
+  t.is(3, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   t.falsy(lastUsedTs === axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
 
