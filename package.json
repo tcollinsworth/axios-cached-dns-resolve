@@ -38,6 +38,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "body-parser": "^1.18.3",
+    "delay": "^4.2.0",
     "eslint": "^5.14.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
@@ -47,7 +48,10 @@
     "json-stringify-safe": "^5.0.1"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0"
+    "babel-polyfill": "^6.26.0",
+    "lru-cache": "^5.1.1",
+    "pino": "^5.12.2",
+    "pino-pretty": "^2.6.0"
   },
   "ava": {
     "files": [
