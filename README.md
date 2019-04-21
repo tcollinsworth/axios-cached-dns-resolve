@@ -58,9 +58,9 @@ const config = {
   dnsCacheSize: process.env.AXIOS_DNS_CACHE_SIZE || 100, // maximum number of entries to keep in cache
   // pino logging options
   logging: {
-    name: 'kafka-publisher',
+    name: 'axios-cache-dns-resolve',
     // enabled: true,
-    // level: 'debug', // default 'info' //comment out or set to 'info'
+    level: process.env.AXIOS_DNS_LOG_LEVEL || 'info', // default 'info' others trace, debug, info, warn, error, and fatal
     // timestamp: true,
     prettyPrint: process.env.NODE_ENV === 'DEBUG' || false,
     useLevelLabels: true,
