@@ -28,6 +28,7 @@ test.beforeEach(() => {
 
   axiosClient = axios.create({
     timeout: 5000,
+    //maxRedirects: 0,
   })
 
   axiosCachingDns.registerInterceptor(axiosClient)
@@ -53,7 +54,7 @@ test('query google with baseURL and relative url', async t => {
 })
 
 test('query google caches and after idle delay uncached', async t => {
-  const resp = await axiosClient.get('https://amazon.com')
+  const resp = await axiosClient.get('http://amazon.com')
   t.truthy(resp.data)
   t.truthy(axiosCachingDns.config.cache.get('amazon.com'))
   await delay(6000)
@@ -76,7 +77,7 @@ test('query google caches and after idle delay uncached', async t => {
 })
 
 test('query google caches and refreshes', async t => {
-  await axiosClient.get('https://amazon.com')
+  await axiosClient.get('http://amazon.com')
   const updatedTs = axiosCachingDns.config.cache.get('amazon.com').updatedTs
   const timeoutTime = Date.now() + 5000
   while (true) {
@@ -105,19 +106,19 @@ test('query google caches and refreshes', async t => {
 })
 
 test('query two services, caches and after one idle delay uncached', async t => {
-  await axiosClient.get('https://amazon.com')
+  await axiosClient.get('http://amazon.com')
 
-  await axiosClient.get('https://microsoft.com')
+  await axiosClient.get('http://microsoft.com')
   const lastUsedTs = axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs
   t.is(1, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
-  await axiosClient.get('https://microsoft.com')
+  await axiosClient.get('http://microsoft.com')
   t.is(2, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   t.truthy(lastUsedTs < axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
 
   t.is(2, axiosCachingDns.config.cache.length)
-  await axiosClient.get('https://microsoft.com')
+  await axiosClient.get('http://microsoft.com')
   t.is(3, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   t.falsy(lastUsedTs === axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
@@ -143,4 +144,51 @@ test('query two services, caches and after one idle delay uncached', async t => 
   const stats = axiosCachingDns.getStats()
   delete stats.refreshed
   t.deepEqual(expectedStats, stats)
+})
+
+test('validate axios config not altered', async t => {
+  const baseURL = 'http://microsoft.com'
+  const axiosConfig = { baseURL }
+  const custAxiosClient = axios.create(axiosConfig)
+
+  axiosCachingDns.registerInterceptor(custAxiosClient)
+
+  await custAxiosClient.get('/')
+  t.is(baseURL, axiosConfig.baseURL)
+  await custAxiosClient.get('/')
+  t.is(baseURL, axiosConfig.baseURL)
+})
+
+test('validate axios get config not altered', async t => {
+  const url = 'http://microsoft.com'
+  const custAxiosClient = axios.create()
+
+  const reqConfig = {
+    method: 'get',
+    url,
+  }
+
+  axiosCachingDns.registerInterceptor(custAxiosClient)
+
+  await custAxiosClient.get(url, reqConfig)
+  t.is(url, reqConfig.url)
+  await custAxiosClient.get(url, reqConfig)
+  t.is(url, reqConfig.url)
+})
+
+test('validate axios request config not altered', async t => {
+  const url = 'http://microsoft.com'
+  const custAxiosClient = axios.create()
+
+  const reqConfig = {
+    method: 'get',
+    url,
+  }
+
+  axiosCachingDns.registerInterceptor(custAxiosClient)
+
+  await custAxiosClient.request(reqConfig)
+  t.is(url, reqConfig.url)
+  await custAxiosClient.request(reqConfig)
+  t.is(url, reqConfig.url)
 })
