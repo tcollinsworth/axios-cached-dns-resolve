@@ -44,8 +44,7 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-watch": "^4.0.2",
     "express": "^4.16.4",
-    "ignore-styles": "^5.0.1",
-    "json-stringify-safe": "^5.0.1"
+    "ignore-styles": "^5.0.1"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
