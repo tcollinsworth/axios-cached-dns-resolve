@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
     "pino": "^5.12.2",
