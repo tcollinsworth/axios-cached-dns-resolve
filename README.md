@@ -1,10 +1,10 @@
 # axios-cached-dns-resolve
 
-Axios uses node.js dns.resolve to resolve host names.
-dns.resolve is synchronous and executes on limited libuv thread pool.
+Axios uses node.js dns.lookup to resolve host names.
+dns.lookup is synchronous and executes on limited libuv thread pool.
 Every axios request will resolve the dns name in kubernetes, openshift, and cloud environments that intentionally set TTL low or to 0 for quick dynamic updates.
 The dns resolvers can be overwhelmed with the load.
-There is/was a bug in DNS resolver that manifests as very long dns.lookups in node.js.
+There is/was a bug in DNS resolutions that manifests as very long dns.lookups in node.js.
 
 From the kubernetes [documentation](https://kubernetes.io/docs/concepts/services-networking/service/#why-not-use-round-robin-dns)
 
@@ -23,6 +23,7 @@ This lib proxies through the OS resolution mechanism which may provide further c
   * Fast - local in-app memory cache lookup
   * Fresh - periodically (frequently) updated
   * Constant DNS load/latency vs random load/variable latency
+  * Providing statistics and introspection
 
 ## Requirements
 
@@ -43,8 +44,9 @@ npm i -S axios-cached-dns-resolve
 
   registerInterceptor(axiosClient)
 
-  Use axiosClient as normal
 ```
+Use axiosClient as normal
+
 
 ## Configuration
 
@@ -74,13 +76,27 @@ Statistics are available via getStats()
 
 ```javascript
 const stats = {
-  dnsEntries: 0,
-  refreshed: 0,
-  hits: 0,
-  misses: 0,
-  idleExpired: 0,
-  errors: 0,
-  lastError: 0,
-  lastErrorTs: 0,
+  "dnsEntries": 4,
+  "refreshed": 375679,
+  "hits": 128689,
+  "misses": 393,
+  "idleExpired": 279,
+  "errors": 0,
+  "lastError": 0,
+  "lastErrorTs": 0
 }
+
+const cacheEntries = [
+  {
+    "host": "foo-service.domain.com",
+    "ips": [
+      "51.210.235.165",
+      "181.73.135.40"
+    ],
+    "nextIdx": 1,
+    "lastUsedTs": 1604151366910,
+    "updatedTs": 1604152691039
+  },
+  ...
+]
 ```
