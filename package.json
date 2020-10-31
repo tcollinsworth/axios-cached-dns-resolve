@@ -1,16 +1,16 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
-  "main": "index.js",
   "scripts": {
     "watchUnit": "NODE_ENV=DEBUG ava --fail-fast -v **/__tests__/**/*test*.js --watch",
     "ava": "ava",
     "test": "npm run ava",
-    "build": "babel lib --presets babel-preset-es2015 --out-dir dist",
-    "prepublish": "npm run build",
     "watchLint": "esw . --ext=js --ignore-pattern '**/__tests__' --ignore-path .gitignore --fix --watch",
     "lint": "eslint . --ext=js --ignore-pattern '**/__tests__' --ignore-path .gitignore --fix"
+  },
+  "engines": {
+    "node": ">=10.13.0"
   },
   "esm": {
     "force": true,
@@ -30,29 +30,24 @@
     "url": "git@github.com:tcollinsworth/axios-cached-dns-resolve.git"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
-    "axios": "^0.18.1",
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "body-parser": "^1.18.3",
-    "delay": "^4.2.0",
-    "eslint": "^5.14.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-watch": "^4.0.2",
-    "express": "^4.16.4",
-    "ignore-styles": "^5.0.1"
+    "ava": "^3.13.0",
+    "axios": "^0.21.0",
+    "body-parser": "^1.19.0",
+    "delay": "^4.4.0",
+    "eslint": "^7.12.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-watch": "^7.0.0",
+    "express": "^4.17.1",
+    "ignore-styles": "^5.0.1",
+    "esm": "^3.2.25"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
     "json-stringify-safe": "^5.0.1",
-    "lodash": "^4.17.15",
-    "lru-cache": "^5.1.1",
-    "pino": "^5.12.2",
-    "pino-pretty": "^2.6.0"
+    "lodash": "^4.17.20",
+    "lru-cache": "^6.0.0",
+    "pino": "^6.7.0",
+    "pino-pretty": "^4.3.0"
   },
   "ava": {
     "files": [
@@ -61,10 +56,8 @@
     "failFast": true,
     "verbose": true,
     "require": [
-      "ignore-styles",
-      "babel-register",
-      "babel-polyfill"
-    ],
-    "babel": "inherit"
+      "esm",
+      "ignore-styles"
+    ]
   }
 }
