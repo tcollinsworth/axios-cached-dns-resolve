@@ -72,10 +72,12 @@ const config = {
 
 ## Statistics
 
-Statistics are available via getStats()
+Statistics are available via 
 
 ```javascript
-const stats = {
+getStats()
+
+{
   "dnsEntries": 4,
   "refreshed": 375679,
   "hits": 128689,
@@ -86,7 +88,11 @@ const stats = {
   "lastErrorTs": 0
 }
 
-const cacheEntries = [
+AND
+
+getDnsCacheEntries()
+
+[
   {
     "host": "foo-service.domain.com",
     "ips": [
@@ -99,4 +105,22 @@ const cacheEntries = [
   },
   ...
 ]
+```
+
+### Express Statistics
+
+```javascript
+import { getStats, getDnsCacheEntries } from 'axios-cached-dns-resolve'
+
+router.get('/axios-dns-cache-statistics', getAxiosDnsCacheStatistics)
+
+function getAxiosDnsCacheStatistics(req, resp) {
+  resp.json(getStats())
+}
+
+router.get('/axios-dns-cache-entries', getAxiosDnsCacheEntries)
+
+function getAxiosDnsCacheEntries(req, resp) {
+  resp.json(getDnsCacheEntries())
+}
 ```
