@@ -8,7 +8,7 @@ import LRUCache from 'lru-cache'
 import axios from 'axios'
 import stringify from 'json-stringify-safe'
 
-import * as axiosCachingDns from '../axios-cached-dns-resolve'
+import * as axiosCachingDns from '../index'
 
 const util = require('util')
 const dnsResolve = util.promisify(dns.resolve)
