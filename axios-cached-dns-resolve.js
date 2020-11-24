@@ -97,24 +97,28 @@ export function getDnsCacheEntries() {
 export function registerInterceptor(axios) {
   if (config.disabled || !axios || !axios.interceptors) return // supertest
   axios.interceptors.request.use(async (reqConfig) => {
-    let url
-    if (reqConfig.baseURL) {
-      url = URL.parse(reqConfig.baseURL)
-    } else {
-      url = URL.parse(reqConfig.url)
-    }
+    try {
+      let url
+      if (reqConfig.baseURL) {
+        url = URL.parse(reqConfig.baseURL)
+      } else {
+        url = URL.parse(reqConfig.url)
+      }
 
-    if (net.isIP(url.hostname)) return reqConfig // skip
+      if (net.isIP(url.hostname)) return reqConfig // skip
 
-    reqConfig.headers.Host = url.hostname // set hostname in header
+      reqConfig.headers.Host = url.hostname // set hostname in header
 
-    url.hostname = await getAddress(url.hostname)
-    delete url.host // clear hostname
+      url.hostname = await getAddress(url.hostname)
+      delete url.host // clear hostname
 
-    if (reqConfig.baseURL) {
-      reqConfig.baseURL = URL.format(url)
-    } else {
-      reqConfig.url = URL.format(url)
+      if (reqConfig.baseURL) {
+        reqConfig.baseURL = URL.format(url)
+      } else {
+        reqConfig.url = URL.format(url)
+      }
+    } catch (err) {
+      recordError(err, `Error getAddress, ${err.message}`)
     }
 
     return reqConfig
