@@ -4,9 +4,8 @@ import URL from 'url'
 import net from 'net'
 import stringify from 'json-stringify-safe'
 import LRUCache from 'lru-cache'
-import { init as initLogger } from './logging'
-
-const util = require('util')
+import util from 'util'
+import { init as initLogger } from './logging.mjs'
 
 const dnsResolve = util.promisify(dns.resolve)
 

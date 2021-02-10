@@ -1,20 +1,12 @@
-import { serial as test } from 'ava'
+import ava from 'ava'
 import delay from 'delay'
-import dns from 'dns'
-import URL from 'url'
-import net from 'net'
 import LRUCache from 'lru-cache'
-
 import axios from 'axios'
-import stringify from 'json-stringify-safe'
+import * as axiosCachingDns from '../index.mjs'
 
-import * as axiosCachingDns from '../index'
-
-const util = require('util')
-const dnsResolve = util.promisify(dns.resolve)
+const test = ava.serial
 
 let axiosClient
-let reqHeaders
 
 test.beforeEach(() => {
   axiosCachingDns.config.dnsTtlMs = 1000
@@ -28,7 +20,7 @@ test.beforeEach(() => {
 
   axiosClient = axios.create({
     timeout: 5000,
-    //maxRedirects: 0,
+    // maxRedirects: 0,
   })
 
   axiosCachingDns.registerInterceptor(axiosClient)
@@ -41,19 +33,19 @@ test.after.always(() => {
   axiosCachingDns.config.cache.reset()
 })
 
-test('query google with baseURL and relative url', async t => {
+test('query google with baseURL and relative url', async (t) => {
   axiosCachingDns.registerInterceptor(axios)
 
   const { data } = await axios.get('/finance', {
-      baseURL: 'http://www.google.com',
-      //headers: { Authorization: `Basic ${basicauth}` },
-    })
+    baseURL: 'http://www.google.com',
+    // headers: { Authorization: `Basic ${basicauth}` },
+  })
   t.truthy(data)
   t.is(1, axiosCachingDns.getStats().dnsEntries)
   t.is(1, axiosCachingDns.getStats().misses)
 })
 
-test('query google caches and after idle delay uncached', async t => {
+test('query google caches and after idle delay uncached', async (t) => {
   const resp = await axiosClient.get('http://amazon.com')
   t.truthy(resp.data)
   t.truthy(axiosCachingDns.config.cache.get('amazon.com'))
@@ -62,13 +54,13 @@ test('query google caches and after idle delay uncached', async t => {
 
   const expectedStats = {
     dnsEntries: 0,
-    //refreshed: 4, variable
+    // refreshed: 4, variable
     hits: 0,
     misses: 2,
     idleExpired: 1,
     errors: 0,
     lastError: 0,
-    lastErrorTs: 0
+    lastErrorTs: 0,
   }
 
   const stats = axiosCachingDns.getStats()
@@ -76,28 +68,30 @@ test('query google caches and after idle delay uncached', async t => {
   t.deepEqual(expectedStats, stats)
 })
 
-test('query google caches and refreshes', async t => {
+test('query google caches and refreshes', async (t) => {
   await axiosClient.get('http://amazon.com')
-  const updatedTs = axiosCachingDns.config.cache.get('amazon.com').updatedTs
+  const { updatedTs } = axiosCachingDns.config.cache.get('amazon.com')
   const timeoutTime = Date.now() + 5000
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const dnsEntry = axiosCachingDns.config.cache.get('amazon.com')
     if (!dnsEntry) t.fail('dnsEntry missing or expired')
-    //console.log(dnsEntry)
-    if (updatedTs != dnsEntry.updatedTs) break
+    // console.log(dnsEntry)
+    if (updatedTs !== dnsEntry.updatedTs) break
     if (Date.now() > timeoutTime) t.fail()
+    // eslint-disable-next-line no-await-in-loop
     await delay(10)
   }
 
   const expectedStats = {
     dnsEntries: 1,
-    //refreshed: 5, variable
+    // refreshed: 5, variable
     hits: 0,
     misses: 3,
     idleExpired: 1,
     errors: 0,
     lastError: 0,
-    lastErrorTs: 0
+    lastErrorTs: 0,
   }
 
   const stats = axiosCachingDns.getStats()
@@ -105,11 +99,11 @@ test('query google caches and refreshes', async t => {
   t.deepEqual(expectedStats, stats)
 })
 
-test('query two services, caches and after one idle delay uncached', async t => {
+test('query two services, caches and after one idle delay uncached', async (t) => {
   await axiosClient.get('http://amazon.com')
 
   await axiosClient.get('http://microsoft.com')
-  const lastUsedTs = axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs
+  const { lastUsedTs } = axiosCachingDns.config.cache.get('microsoft.com')
   t.is(1, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   await axiosClient.get('http://microsoft.com')
@@ -129,16 +123,15 @@ test('query two services, caches and after one idle delay uncached', async t => 
   await delay(2000)
   t.is(0, axiosCachingDns.config.cache.length)
 
-
   const expectedStats = {
     dnsEntries: 0,
-    //refreshed: 17, variable
+    // refreshed: 17, variable
     hits: 2,
     misses: 5,
     idleExpired: 3,
     errors: 0,
     lastError: 0,
-    lastErrorTs: 0
+    lastErrorTs: 0,
   }
 
   const stats = axiosCachingDns.getStats()
@@ -146,7 +139,7 @@ test('query two services, caches and after one idle delay uncached', async t => 
   t.deepEqual(expectedStats, stats)
 })
 
-test('validate axios config not altered', async t => {
+test('validate axios config not altered', async (t) => {
   const baseURL = 'http://microsoft.com'
   const axiosConfig = { baseURL }
   const custAxiosClient = axios.create(axiosConfig)
@@ -159,7 +152,7 @@ test('validate axios config not altered', async t => {
   t.is(baseURL, axiosConfig.baseURL)
 })
 
-test('validate axios get config not altered', async t => {
+test('validate axios get config not altered', async (t) => {
   const url = 'http://microsoft.com'
   const custAxiosClient = axios.create()
 
@@ -176,7 +169,7 @@ test('validate axios get config not altered', async t => {
   t.is(url, reqConfig.url)
 })
 
-test('validate axios request config not altered', async t => {
+test('validate axios request config not altered', async (t) => {
   const url = 'http://microsoft.com'
   const custAxiosClient = axios.create()
 

@@ -1,19 +1,19 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "1.2.1",
+  "version": "2.0.0",
+  "type": "commonjs",
   "main": "index.js",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
   "scripts": {
     "watchUnit": "NODE_ENV=DEBUG ava --fail-fast -v **/__tests__/**/*test*.js --watch",
     "ava": "ava",
     "test": "npm run ava",
-    "watchLint": "esw . --ext=js --ignore-pattern '**/__tests__' --ignore-path .gitignore --fix --watch",
-    "lint": "eslint . --ext=js --ignore-pattern '**/__tests__' --ignore-path .gitignore --fix"
+    "watchLint": "esw . --ext=js --ext=mjs --ignore-path .gitignore --fix --watch",
+    "lint": "eslint . --ext=js --ext=mjs --ignore-path .gitignore --fix"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=14.0.0"
   },
-  "type": "commonjs",
   "esm": {
     "force": true,
     "mode": "auto"
@@ -32,11 +32,11 @@
     "url": "git@github.com:tcollinsworth/axios-cached-dns-resolve.git"
   },
   "devDependencies": {
-    "ava": "^3.13.0",
-    "axios": "^0.21.0",
+    "ava": "^3.15.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
-    "delay": "^4.4.0",
-    "eslint": "^7.14.0",
+    "delay": "^5.0.0",
+    "eslint": "^7.19.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-watch": "^7.0.0",
@@ -47,18 +47,7 @@
   "dependencies": {
     "json-stringify-safe": "^5.0.1",
     "lru-cache": "^6.0.0",
-    "pino": "^6.7.0",
-    "pino-pretty": "^4.3.0"
-  },
-  "ava": {
-    "files": [
-      "**/__tests__/**/*test*.js"
-    ],
-    "failFast": true,
-    "verbose": true,
-    "require": [
-      "esm",
-      "ignore-styles"
-    ]
+    "pino": "^6.11.1",
+    "pino-pretty": "^4.5.0"
   }
 }
