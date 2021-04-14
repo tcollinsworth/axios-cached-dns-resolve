@@ -27,7 +27,9 @@ This lib proxies through the OS resolution mechanism which may provide further c
 
 ## Requirements
 
-Node 8+
+ECMAScript module (esm/.mjs)
+
+Node 14+
 
 ## Getting started
 

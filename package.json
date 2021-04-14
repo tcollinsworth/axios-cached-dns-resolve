@@ -1,6 +1,6 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "main": "index.mjs",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
@@ -36,18 +36,18 @@
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "delay": "^5.0.0",
-    "eslint": "^7.19.0",
+    "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-watch": "^7.0.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
-    "ignore-styles": "^5.0.1",
-    "esm": "^3.2.25"
+    "ignore-styles": "^5.0.1"
   },
   "dependencies": {
     "json-stringify-safe": "^5.0.1",
     "lru-cache": "^6.0.0",
-    "pino": "^6.11.1",
-    "pino-pretty": "^4.5.0"
+    "pino": "^6.11.2",
+    "pino-pretty": "^4.7.1"
   }
 }
