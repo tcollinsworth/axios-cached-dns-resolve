@@ -2,7 +2,7 @@ import ava from 'ava'
 import delay from 'delay'
 import LRUCache from 'lru-cache'
 import axios from 'axios'
-import * as axiosCachingDns from '../index.mjs'
+import * as axiosCachingDns from '../index.js'
 
 const test = ava.serial
 

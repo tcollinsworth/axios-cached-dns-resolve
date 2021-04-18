@@ -10,4 +10,4 @@ export {
   registerInterceptor,
   getAddress,
   backgroundRefresh,
-} from './axios-cached-dns-resolve.mjs'
+} from './axios-cached-dns-resolve.js'

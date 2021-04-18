@@ -5,7 +5,7 @@ import net from 'net'
 import stringify from 'json-stringify-safe'
 import LRUCache from 'lru-cache'
 import util from 'util'
-import { init as initLogger } from './logging.mjs'
+import { init as initLogger } from './logging.js'
 
 const dnsResolve = util.promisify(dns.resolve)
 

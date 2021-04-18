@@ -1,6 +1,6 @@
 module.exports = {
   files: [
-    '**/__tests__/**/*test*.mjs',
+    '**/__tests__/**/*test*.js',
   ],
   failFast: true,
   verbose: true,
