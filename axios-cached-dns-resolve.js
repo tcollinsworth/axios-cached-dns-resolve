@@ -23,7 +23,11 @@ export const config = {
     level: process.env.AXIOS_DNS_LOG_LEVEL || 'info', // default 'info' others trace, debug, info, warn, error, and fatal
     // timestamp: true,
     prettyPrint: process.env.NODE_ENV === 'DEBUG' || false,
-    useLevelLabels: true,
+    formatters: {
+      level(label/* , number */) {
+        return { level: label }
+      },
+    },
   },
   cache: undefined,
 }

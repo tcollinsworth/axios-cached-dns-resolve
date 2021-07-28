@@ -1,12 +1,12 @@
 {
   "name": "axios-cached-dns-resolve",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "main": "index",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
   "scripts": {
     "watchUnit": "NODE_ENV=DEBUG ava --fail-fast -v **/__tests__/**/*test*.js --watch",
     "ava": "ava",
-    "test": "npm run ava",
+    "test": "npm run ava -timeout=2m",
     "watchLint": "esw . --ext=js --ext=mjs --ignore-path .gitignore --fix --watch",
     "lint": "eslint . --ext=js --ext=mjs --ignore-path .gitignore --fix"
   },
