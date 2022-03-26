@@ -34,7 +34,7 @@ export const config = {
 
 export const cacheConfig = {
   max: config.dnsCacheSize,
-  maxAge: (config.dnsTtlMs * config.cacheGraceExpireMultiplier), // grace for refresh
+  ttl: (config.dnsTtlMs * config.cacheGraceExpireMultiplier), // grace for refresh
 }
 
 export const stats = {
@@ -63,7 +63,7 @@ export function init() {
 
   startBackgroundRefresh()
   startPeriodicCachePrune()
-  cachePruneId = setInterval(() => config.cache.prune(), config.dnsIdleTtlMs)
+  cachePruneId = setInterval(() => config.cache.purgeStale(), config.dnsIdleTtlMs)
 }
 
 export function startBackgroundRefresh() {
@@ -73,11 +73,11 @@ export function startBackgroundRefresh() {
 
 export function startPeriodicCachePrune() {
   if (cachePruneId) clearInterval(cachePruneId)
-  cachePruneId = setInterval(() => config.cache.prune(), config.dnsIdleTtlMs)
+  cachePruneId = setInterval(() => config.cache.purgeStale(), config.dnsIdleTtlMs)
 }
 
 export function getStats() {
-  stats.dnsEntries = config.cache.length
+  stats.dnsEntries = config.cache.size
   return stats
 }
 
@@ -167,7 +167,7 @@ export async function backgroundRefresh() {
         }
         if (value.lastUsedTs + config.dnsIdleTtlMs <= Date.now()) {
           ++stats.idleExpired
-          config.cache.del(key)
+          config.cache.delete(key)
           return // continue
         }
 

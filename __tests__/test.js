@@ -14,7 +14,7 @@ test.beforeEach(() => {
   axiosCachingDns.config.cacheGraceExpireMultiplier = 2
   axiosCachingDns.config.backgroundScanMs = 100
 
-  axiosCachingDns.cacheConfig.maxAge = (axiosCachingDns.config.dnsTtlMs * axiosCachingDns.config.cacheGraceExpireMultiplier)
+  axiosCachingDns.cacheConfig.ttl = (axiosCachingDns.config.dnsTtlMs * axiosCachingDns.config.cacheGraceExpireMultiplier)
 
   axiosCachingDns.config.cache = new LRUCache(axiosCachingDns.cacheConfig)
 
@@ -30,7 +30,7 @@ test.beforeEach(() => {
 })
 
 test.after.always(() => {
-  axiosCachingDns.config.cache.reset()
+  axiosCachingDns.config.cache.clear()
 })
 
 test('query google with baseURL and relative url', async (t) => {
@@ -111,17 +111,17 @@ test('query two services, caches and after one idle delay uncached', async (t) =
 
   t.truthy(lastUsedTs < axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
 
-  t.is(2, axiosCachingDns.config.cache.length)
+  t.is(2, axiosCachingDns.config.cache.size)
   await axiosClient.get('http://microsoft.com')
   t.is(3, axiosCachingDns.config.cache.get('microsoft.com').nextIdx)
 
   t.falsy(lastUsedTs === axiosCachingDns.config.cache.get('microsoft.com').lastUsedTs)
 
-  t.is(2, axiosCachingDns.config.cache.length)
+  t.is(2, axiosCachingDns.config.cache.size)
   await delay(4000)
-  t.is(1, axiosCachingDns.config.cache.length)
+  t.is(1, axiosCachingDns.config.cache.size)
   await delay(2000)
-  t.is(0, axiosCachingDns.config.cache.length)
+  t.is(0, axiosCachingDns.config.cache.size)
 
   const expectedStats = {
     dnsEntries: 0,
