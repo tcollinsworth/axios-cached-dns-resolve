@@ -8,6 +8,7 @@ import util from 'util'
 import { init as initLogger } from './logging.js'
 
 const dnsResolve = util.promisify(dns.resolve)
+const dnsLookup = util.promisify(dns.lookup)
 
 export const config = {
   disabled: process.env.AXIOS_DNS_DISABLE === 'true',
@@ -141,7 +142,7 @@ export async function getAddress(host) {
   ++stats.misses
   if (log.isLevelEnabled('debug')) log.debug(`cache miss ${host}`)
 
-  const ips = await dnsResolve(host)
+  const ips = await resolve(host)
   dnsEntry = {
     host,
     ips,
@@ -171,7 +172,7 @@ export async function backgroundRefresh() {
           return // continue
         }
 
-        const ips = await dnsResolve(value.host)
+        const ips = await resolve(value.host)
         value.ips = ips
         value.updatedTs = Date.now()
         config.cache.set(key, value)
@@ -187,6 +188,24 @@ export async function backgroundRefresh() {
   } finally {
     backgroundRefreshing = false
   }
+}
+
+/**
+ *
+ * @param host
+ * @returns {*[]}
+ */
+async function resolve(host) {
+  let ips
+  try {
+    ips = await dnsResolve(host)
+  } catch (e) {
+    const lookupResp = await dnsLookup(host)
+    if (lookupResp.address == null) throw new Error(`fallback to dnsLookup returned no address ${host}`)
+    // lookup only returns 1 host, resolve returns multiple for round-robin
+    ips = [lookupResp.address]
+  }
+  return ips
 }
 
 function recordError(err, errMesg) {
