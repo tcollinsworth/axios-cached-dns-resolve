@@ -199,13 +199,23 @@ async function resolve(host) {
   let ips
   try {
     ips = await dnsResolve(host)
+    throw new Error('test')
   } catch (e) {
-    const lookupResp = await dnsLookup(host)
-    if (lookupResp.address == null) throw new Error(`fallback to dnsLookup returned no address ${host}`)
-    // lookup only returns 1 host, resolve returns multiple for round-robin
-    ips = [lookupResp.address]
+    let lookupResp = await dnsLookup(host, { all: true }) // pass options all: true for all addresses
+    lookupResp = extractAddresses(lookupResp)
+    if (!Array.isArray(lookupResp) || lookupResp.length < 1) throw new Error(`fallback to dnsLookup returned no address ${host}`)
+    ips = lookupResp
   }
   return ips
+}
+
+// dns.lookup
+// ***************** { address: '142.250.190.68', family: 4 }
+// , { all: true } /***************** [ { address: '142.250.190.68', family: 4 } ]
+
+function extractAddresses(lookupResp) {
+  if (!Array.isArray(lookupResp)) throw new Error('lookup response did not contain array of addresses')
+  return lookupResp.filter((e) => e.address != null).map((e) => e.address)
 }
 
 function recordError(err, errMesg) {
