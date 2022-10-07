@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1] - 2022-09-06
+
+### Fixed
+
+- Fixed bug were getDnsCacheEntries was returning generator from lru-cache to instead return array
+
+
 ## [3.2.0] - 2022-09-06
 
 ### Changed

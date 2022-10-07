@@ -43,6 +43,25 @@ test('query google with baseURL and relative url', async (t) => {
   t.truthy(data)
   t.is(1, axiosCachingDns.getStats().dnsEntries)
   t.is(1, axiosCachingDns.getStats().misses)
+
+  const dnsCacheEntries = axiosCachingDns.getDnsCacheEntries()
+  /*
+   * [
+   *   {
+   *     host: 'www.google.com',
+   *     ips: [ '142.250.190.68' ],
+   *     nextIdx: 1,
+   *     lastUsedTs: 1665100589485,
+   *     updatedTs: 1665100590488
+   *   }
+   * ]
+   */
+  t.truthy(Array.isArray(dnsCacheEntries))
+  t.truthy(Array.isArray(dnsCacheEntries[0].ips))
+  t.truthy(dnsCacheEntries[0].ips[0])
+  t.truthy(dnsCacheEntries[0].host)
+  t.truthy(dnsCacheEntries[0].lastUsedTs)
+  t.truthy(dnsCacheEntries[0].updatedTs)
 })
 
 test('query google caches and after idle delay uncached', async (t) => {

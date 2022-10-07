@@ -83,7 +83,7 @@ export function getStats() {
 }
 
 export function getDnsCacheEntries() {
-  return config.cache.values()
+  return Array.from(config.cache.values())
 }
 
 // const dnsEntry = {
