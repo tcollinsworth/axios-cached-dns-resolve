@@ -199,7 +199,6 @@ async function resolve(host) {
   let ips
   try {
     ips = await dnsResolve(host)
-    throw new Error('test')
   } catch (e) {
     let lookupResp = await dnsLookup(host, { all: true }) // pass options all: true for all addresses
     lookupResp = extractAddresses(lookupResp)
