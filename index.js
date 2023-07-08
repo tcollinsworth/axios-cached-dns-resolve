@@ -3,6 +3,7 @@ export {
   cacheConfig,
   stats,
   init,
+  reset,
   startBackgroundRefresh,
   startPeriodicCachePrune,
   getStats,

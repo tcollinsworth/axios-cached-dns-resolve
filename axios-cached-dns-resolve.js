@@ -67,6 +67,11 @@ export function init() {
   cachePruneId = setInterval(() => config.cache.purgeStale(), config.dnsIdleTtlMs)
 }
 
+export function reset() {
+  if (backgroundRefreshId) clearInterval(backgroundRefreshId)
+  if (cachePruneId) clearInterval(cachePruneId)
+}
+
 export function startBackgroundRefresh() {
   if (backgroundRefreshId) clearInterval(backgroundRefreshId)
   backgroundRefreshId = setInterval(backgroundRefresh, config.backgroundScanMs)
