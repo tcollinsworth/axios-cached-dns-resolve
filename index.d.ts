@@ -38,7 +38,7 @@ declare module 'axios-cached-dns-resolve' {
         misses: number
         idleExpired: number
         errors: number
-        lastError: number
+        lastError: number | Error | string
         lastErrorTs: number
     }
 
@@ -56,7 +56,7 @@ declare module 'axios-cached-dns-resolve' {
 
     export function getDnsCacheEntries(): DnsEntry[]
 
-    export function registerInterceptor(axios: AxiosInstance): void
+    export function registerInterceptor(axios?: AxiosInstance): void
 
     export function getAddress(host: string): Promise<string>
 
