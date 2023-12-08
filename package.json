@@ -2,6 +2,7 @@
   "name": "axios-cached-dns-resolve",
   "version": "3.3.0",
   "main": "index",
+  "type": "module",
   "description": "Caches dns resolutions made with async dns.resolve instead of default sync dns.lookup, refreshes in background",
   "scripts": {
     "watchUnit": "NODE_ENV=DEBUG ava --fail-fast -v **/__tests__/**/*test*.js --watch",
